@@ -46,5 +46,35 @@ module tb_pipelined_processor;
         $display("Starting simulation...");
         $monitor("Time=%0t, PC=%h, Instruction=%h", $time, dut.if_stage_inst.pc, dut.if_id_instruction);
     end
+// tb_pipelined_processor.v
+`timescale 1ns / 1ps
 
+module tb_pipelined_processor;
+    reg clk, reset;
+    pipelined_processor dut (.clk(clk), .reset(reset));
+
+    always #5 clk = ~clk;
+
+    initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, tb_pipelined_processor);
+        clk = 0; reset = 1;
+        #20 reset = 0;
+        #200;
+        $display("Simulation Finished.");
+        $finish;
+    end
+
+    initial begin
+        $display("Time\t PC\t Instr\t\t X2\t X3\t X4\t X5");
+        forever begin
+            @(posedge clk);
+            #1;
+            $display("%0t\t %h\t %h\t %d\t %d\t %d\t %d", 
+                     $time, dut.if_stage_inst.pc, dut.if_id_instruction,
+                     dut.id_stage_inst.reg_file[2], dut.id_stage_inst.reg_file[3],
+                     dut.id_stage_inst.reg_file[4], dut.id_stage_inst.reg_file[5]);
+        end
+    end
+endmodule
 endmodule
