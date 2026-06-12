@@ -80,7 +80,8 @@ module pipelined_processor (
         .id_ex_mem_read(id_ex_mem_read),
         .id_ex_mem_write(id_ex_mem_write),
         .id_ex_mem_to_reg(id_ex_mem_to_reg),
-        .id_ex_reg_write(id_ex_reg_write),
+        .id_ex_reg_write(id_ex_reg_write), 
+        .id_ex_alu_src(id_ex_alu_src),
         .mem_wb_rd_addr(mem_wb_rd_addr),
         .mem_wb_alu_result(mem_wb_alu_result),
         .mem_wb_read_data(mem_wb_read_data),
@@ -100,6 +101,7 @@ module pipelined_processor (
         .id_ex_rd_addr(id_ex_rd_addr),
         .id_ex_immediate(id_ex_immediate),
         .id_ex_alu_op(id_ex_alu_op),
+        .id_ex_alu_src(id_ex_alu_src),
         .id_ex_mem_read(id_ex_mem_read),
         .id_ex_mem_write(id_ex_mem_write),
         .id_ex_mem_to_reg(id_ex_mem_to_reg),
@@ -117,7 +119,6 @@ module pipelined_processor (
         .mem_wb_read_data(mem_wb_read_data),
         .mem_wb_mem_to_reg(mem_wb_mem_to_reg),
         .mem_wb_reg_write(mem_wb_reg_write),
-        .ex_mem_rd_addr_in(id_ex_rd_addr),
         .forward_a(forward_a),
         .forward_b(forward_b)
     );
