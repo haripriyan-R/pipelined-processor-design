@@ -84,35 +84,82 @@ module id_stage (
         immediate_ctrl = 32'b0;
 
         case (opcode)
-            7'b0110011: begin // R-type (ADD, SUB, AND, OR, XOR, SLL, SRL, SRA, SLT, SLTU)
-                reg_write_ctrl = 1'b1;
-                mem_to_reg_ctrl = 1'b0;
-                case (funct3)
-                    3'b000: alu_op_ctrl = (funct7 == 7'b0000000) ? 3'b000 : 3'b001; // ADD/SUB
-                    3'b001: alu_op_ctrl = 3'b010; // SLL
-                    3'b010: alu_op_ctrl = 3'b011; // SLT
-                    3'b011: alu_op_ctrl = 3'b100; // SLTU
-                    3'b100: alu_op_ctrl = 3'b101; // XOR
-                    3'b101: alu_op_ctrl = (funct7 == 7'b0000000) ? 3'b110 : 3'b111; // SRL/SRA
-                    3'b110: alu_op_ctrl = 3'b000; // OR (placeholder)
-                    3'b111: alu_op_ctrl = 3'b000; // AND (placeholder)
-                endcase
-            end
-            7'b0010011: begin // I-type (ADDI, SLTI, SLTUI, XORI, ORI, ANDI, SLLI, SRLI, SRAI)
-                reg_write_ctrl = 1'b1;
-                mem_to_reg_ctrl = 1'b0;
-                immediate_ctrl = {{20{if_id_instruction[31]}}, if_id_instruction[31:20]}; // Sign-extend
-                case (funct3)
-                    3'b000: alu_op_ctrl = 3'b000; // ADDI
-                    3'b010: alu_op_ctrl = 3'b011; // SLTI
-                    3'b011: alu_op_ctrl = 3'b100; // SLTUI
-                    3'b100: alu_op_ctrl = 3'b101; // XORI
-                    3'b110: alu_op_ctrl = 3'b000; // ORI (placeholder)
-                    3'b111: alu_op_ctrl = 3'b000; // ANDI (placeholder)
-                    3'b001: alu_op_ctrl = 3'b010; // SLLI
-                    3'b101: alu_op_ctrl = (funct7 == 7'b0000000) ? 3'b110 : 3'b111; // SRLI/SRAI
-                endcase
-            end
+           7'b0110011: begin
+    reg_write_ctrl = 1'b1;
+
+    case (funct3)
+
+        3'b000:
+            alu_op_ctrl =
+                (funct7 == 7'b0100000) ?
+                ALU_SUB :
+                ALU_ADD;
+
+        3'b001:
+            alu_op_ctrl = ALU_SLL;
+
+        3'b010:
+            alu_op_ctrl = ALU_SLT;
+
+        3'b011:
+            alu_op_ctrl = ALU_SLTU;
+
+        3'b100:
+            alu_op_ctrl = ALU_XOR;
+
+        3'b101:
+            alu_op_ctrl =
+                (funct7 == 7'b0100000) ?
+                ALU_SRA :
+                ALU_SRL;
+
+        3'b110:
+            alu_op_ctrl = ALU_OR;
+
+        3'b111:
+            alu_op_ctrl = ALU_AND;
+
+    endcase
+end
+            7'b0010011: begin
+
+    reg_write_ctrl = 1'b1;
+
+    immediate_ctrl =
+        {{20{if_id_instruction[31]}},
+          if_id_instruction[31:20]};
+
+    case(funct3)
+
+        3'b000:
+            alu_op_ctrl = ALU_ADD;     // ADDI
+
+        3'b010:
+            alu_op_ctrl = ALU_SLT;     // SLTI
+
+        3'b011:
+            alu_op_ctrl = ALU_SLTU;    // SLTIU
+
+        3'b100:
+            alu_op_ctrl = ALU_XOR;     // XORI
+
+        3'b110:
+            alu_op_ctrl = ALU_OR;      // ORI
+
+        3'b111:
+            alu_op_ctrl = ALU_AND;     // ANDI
+
+        3'b001:
+            alu_op_ctrl = ALU_SLL;     // SLLI
+
+        3'b101:
+            alu_op_ctrl =
+                (funct7 == 7'b0100000) ?
+                ALU_SRA :
+                ALU_SRL;
+
+    endcase
+end
             7'b0000011: begin // I-type (Load instructions: LB, LH, LW, LBU, LHU)
                 mem_read_ctrl = 1'b1;
                 reg_write_ctrl = 1'b1;
