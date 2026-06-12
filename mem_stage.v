@@ -21,42 +21,56 @@ module mem_stage (
     output reg        mem_wb_reg_write
 );
 
-    // Placeholder for Data Memory
-    reg [31:0] data_memory [0:1023]; // 4KB data memory
+    // =====================================================
+    // Data Memory (4 KB)
+    // =====================================================
+    reg [31:0] data_memory [0:1023];
+
     wire [31:0] read_data_from_mem;
 
+    integer i;
+
     initial begin
-        // Initialize data memory (for simulation purposes)
-        integer i;
         for (i = 0; i < 1024; i = i + 1) begin
             data_memory[i] = 32'h00000000;
         end
     end
 
-    // Memory read operation
-    assign read_data_from_mem = data_memory[ex_mem_alu_result[11:2]]; // Word-aligned access
+    // =====================================================
+    // Memory Read
+    // =====================================================
+    assign read_data_from_mem =
+        (ex_mem_mem_read) ?
+        data_memory[ex_mem_alu_result[11:2]] :
+        32'b0;
 
-    // Memory write operation
+    // =====================================================
+    // Memory Write
+    // =====================================================
     always @(posedge clk) begin
         if (ex_mem_mem_write) begin
-            data_memory[ex_mem_alu_result[11:2]] <= ex_mem_write_data;
+            data_memory[ex_mem_alu_result[11:2]]
+                <= ex_mem_write_data;
         end
     end
 
-    // MEM/WB Register
+    // =====================================================
+    // MEM/WB Pipeline Register
+    // =====================================================
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             mem_wb_alu_result <= 32'h00000000;
-            mem_wb_read_data <= 32'h00000000;
-            mem_wb_rd_addr <= 5'b0;
+            mem_wb_read_data  <= 32'h00000000;
+            mem_wb_rd_addr    <= 5'b00000;
             mem_wb_mem_to_reg <= 1'b0;
-            mem_wb_reg_write <= 1'b0;
-        } else begin
+            mem_wb_reg_write  <= 1'b0;
+        end
+        else begin
             mem_wb_alu_result <= ex_mem_alu_result;
-            mem_wb_read_data <= read_data_from_mem;
-            mem_wb_rd_addr <= ex_mem_rd_addr;
+            mem_wb_read_data  <= read_data_from_mem;
+            mem_wb_rd_addr    <= ex_mem_rd_addr;
             mem_wb_mem_to_reg <= ex_mem_mem_to_reg;
-            mem_wb_reg_write <= ex_mem_reg_write;
+            mem_wb_reg_write  <= ex_mem_reg_write;
         end
     end
 
