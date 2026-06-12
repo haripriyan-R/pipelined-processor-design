@@ -24,6 +24,7 @@ module pipelined_processor (
     wire        id_ex_mem_write;
     wire        id_ex_mem_to_reg;
     wire        id_ex_reg_write;
+    wire        id_ex_alu_src;
 
     // EX/MEM Register
     wire [31:0] ex_mem_pc_plus_4;
