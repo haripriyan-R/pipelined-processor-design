@@ -46,6 +46,7 @@ module ex_stage (
     reg [31:0] alu_operand2;
 
     wire [31:0] alu_result_wire;
+    wire [31:0] alu_operand2_final;
 
     // ------------------------------------------------------------------------
     // Forwarding MUX for Operand A
@@ -98,11 +99,11 @@ module ex_stage (
     // ------------------------------------------------------------------------
     // ALU
     // ------------------------------------------------------------------------
-    alu alu_inst (
-        .operand1(alu_operand1),
-        .operand2(alu_operand2),
-        .alu_op(id_ex_alu_op),
-        .result(alu_result_wire)
+   alu alu_inst (
+    .operand1(alu_operand1),
+    .operand2(alu_operand2_final),
+    .alu_op(id_ex_alu_op),
+    .result(alu_result_wire)
     );
 
     // ------------------------------------------------------------------------
@@ -128,7 +129,7 @@ module ex_stage (
 
             ex_mem_pc_plus_4   <= id_ex_pc_plus_4;
             ex_mem_alu_result  <= alu_result_wire;
-            ex_mem_write_data  <= alu_operand2;
+            ex_mem_write_data <= id_ex_read_data2;
 
             ex_mem_rd_addr     <= id_ex_rd_addr;
 
