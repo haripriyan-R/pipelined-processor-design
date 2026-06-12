@@ -17,7 +17,7 @@ module id_stage (
     output reg [4:0]  id_ex_rs2_addr,
     output reg [4:0]  id_ex_rd_addr,
     output reg [31:0] id_ex_immediate,
-    output reg [2:0]  id_ex_alu_op,
+    output reg [3:0]  id_ex_alu_op,
     output reg        id_ex_mem_read,
     output reg        id_ex_mem_write,
     output reg        id_ex_mem_to_reg,
@@ -70,7 +70,7 @@ module id_stage (
     end
 
     // Control Unit (simplified for common R-type, I-type, S-type, U-type, J-type instructions)
-    reg [2:0] alu_op_ctrl;
+    reg [3:0] alu_op_ctrl;
     reg mem_read_ctrl, mem_write_ctrl, mem_to_reg_ctrl, reg_write_ctrl;
     reg [31:0] immediate_ctrl;
 
