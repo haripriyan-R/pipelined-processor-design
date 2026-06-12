@@ -14,6 +14,7 @@ module ex_stage (
     input wire [31:0] id_ex_immediate,
 
     input wire [2:0]  id_ex_alu_op,
+    input wire        id_ex_alu_src,
 
     input wire        id_ex_mem_read,
     input wire        id_ex_mem_write,
