@@ -22,6 +22,7 @@ module id_stage (
     output reg        id_ex_mem_write,
     output reg        id_ex_mem_to_reg,
     output reg        id_ex_reg_write,
+    output reg        id_ex_alu_src;
 
     input wire [4:0]  mem_wb_rd_addr,
     input wire [31:0] mem_wb_alu_result,
