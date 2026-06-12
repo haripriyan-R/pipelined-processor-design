@@ -17,6 +17,8 @@ module ex_stage (
     input wire        id_ex_alu_src,
 
     input wire        id_ex_mem_read,
+
+    input wire        id_ex_mem_read,
     input wire        id_ex_mem_write,
     input wire        id_ex_mem_to_reg,
     input wire        id_ex_reg_write,
